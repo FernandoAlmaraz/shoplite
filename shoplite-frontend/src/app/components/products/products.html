@@ -1,0 +1,41 @@
+<div class="store-container">
+  <header class="store-header">
+    <div class="header-content">
+      <h1>Descubre Nuestros Productos</h1>
+      <p>Artículos variados de alta calidad al mejor precio</p>
+    </div>
+    <div class="header-stats">
+      <span class="badge">{{ products.length }} Productos Disponibles</span>
+    </div>
+  </header>
+
+  <div class="products-grid">
+    <div *ngFor="let product of products" class="product-card">
+      <div class="card-image-wrapper">
+        <img [src]="product.image" [alt]="product.name" class="card-image">
+        <span class="category-badge">{{ product.category || 'Variado' }}</span>
+      </div>
+      
+      <div class="card-content">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        
+        <div class="card-footer">
+          <span class="product-price">${{ product.price }}</span>
+          <button class="add-to-cart-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            Lo quiero
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="products.length === 0" class="empty-state">
+    <p>Cargando productos...</p>
+  </div>
+</div>
