@@ -3,25 +3,14 @@ name: Deploy ShopLite to GitHub Pages
 on:
   push:
     branches:
-      - main  # Dispara el deploy cada vez que haces git push a main
+      - main
 
-# Permisos necesarios para que el Action pueda escribir en GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Evita deploys simultáneos
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write  # Necesario para hacer push a la rama gh-pages
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       # 1. Descarga el código del repositorio
@@ -36,29 +25,21 @@ jobs:
           cache: 'npm'
           cache-dependency-path: shoplite-frontend/package-lock.json
 
-      # 3. Instala las dependencias del proyecto Angular
+      # 3. Instala dependencias
       - name: Install Dependencies
         working-directory: shoplite-frontend
         run: npm ci
 
-      # 4. Hace el build de Angular en modo producción
-      # IMPORTANTE: El base-href debe coincidir exactamente con el nombre del repo
+      # 4. Build de producción con base-href correcto
       - name: Build Angular App
         working-directory: shoplite-frontend
         run: npm run build -- --base-href /shoplite/
 
-      # 5. Configura GitHub Pages
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v4
-
-      # 6. Sube el resultado del build como artifact de Pages
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # La carpeta dist de Angular con el nuevo builder (@angular/build:application)
-          path: 'shoplite-frontend/dist/shoplite-frontend/browser'
-
-      # 7. Despliega en GitHub Pages
+      # 5. Deploy a la rama gh-pages
+      # Este action hace push de la carpeta dist a la rama gh-pages automáticamente
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: shoplite-frontend/dist/shoplite-frontend/browser
+          branch: gh-pages
+          clean: true  # Limpia archivos viejos antes de subir los nuevos
