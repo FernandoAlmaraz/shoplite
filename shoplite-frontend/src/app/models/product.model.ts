@@ -5,5 +5,6 @@ export interface Product {
   category: string;
   price: number;
   image: string;
+  stock: number; // Nueva propiedad de stock
   created_at?: string;
 }

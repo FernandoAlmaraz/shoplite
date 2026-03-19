@@ -22,8 +22,9 @@ export class ProductService {
       'Authorization': `Bearer ${this.supabaseKey}`
     });
 
-    // Añadimos ?select=* para traer todas las columnas
-    return this.http.get<Product[]>(`${this.supabaseUrl}?select=*`, { headers });
+    return this.http.get<Product[]>(`${this.supabaseUrl}?select=*`, { headers }).pipe(
+      map(products => products.filter(p => p.stock > 0))
+    );
   }
 
   /**
