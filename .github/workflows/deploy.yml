@@ -47,11 +47,9 @@ jobs:
         working-directory: shoplite-frontend
         run: npm run build -- --base-href /shoplite/
 
-      # 5. Configura GitHub Pages (enablement: true lo activa automáticamente)
+      # 5. Configura GitHub Pages
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
-        with:
-          enablement: true
 
       # 6. Sube el resultado del build como artifact de Pages
       - name: Upload Pages Artifact
