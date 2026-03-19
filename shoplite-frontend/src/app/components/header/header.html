@@ -19,6 +19,7 @@
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
       </svg>
       Carrito
+      <span class="cart-badge" *ngIf="cartService.count() > 0">{{ cartService.count() }}</span>
     </a>
   </nav>
 
@@ -32,6 +33,9 @@
     <a routerLink="/home" routerLinkActive="active">Inicio</a>
     <a routerLink="/products" routerLinkActive="active">Productos</a>
     <a routerLink="/offers" routerLinkActive="active">Ofertas</a>
-    <a routerLink="/cart" routerLinkActive="active">Carrito</a>
+    <a routerLink="/cart" routerLinkActive="active">
+      Carrito
+      <span class="cart-badge" *ngIf="cartService.count() > 0">{{ cartService.count() }}</span>
+    </a>
   </div>
 </header>

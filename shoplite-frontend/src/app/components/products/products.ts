@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 import { Product } from '../../models/product.model';
 
 @Component({
@@ -18,8 +19,13 @@ export class Products implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService, 
+    private cartService: CartService,
     private cdr: ChangeDetectorRef
   ) { }
+
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+  }
 
   ngOnInit(): void {
     // Usamos el servicio profesional para obtener los datos
