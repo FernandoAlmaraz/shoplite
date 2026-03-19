@@ -6,18 +6,18 @@ on:
       - main
 
 permissions:
-  contents: write  # Necesario para hacer push a la rama gh-pages
+  contents: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Descarga el código del repositorio
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Instala Node.js v20
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,21 +25,25 @@ jobs:
           cache: 'npm'
           cache-dependency-path: shoplite-frontend/package-lock.json
 
-      # 3. Instala dependencias
       - name: Install Dependencies
         working-directory: shoplite-frontend
         run: npm ci
 
-      # 4. Build de producción con base-href correcto
       - name: Build Angular App
         working-directory: shoplite-frontend
         run: npm run build -- --base-href /shoplite/
 
-      # 5. Deploy a la rama gh-pages
-      # Este action hace push de la carpeta dist a la rama gh-pages automáticamente
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: shoplite-frontend/dist/shoplite-frontend/browser
-          branch: gh-pages
-          clean: true  # Limpia archivos viejos antes de subir los nuevos
+      # Copia el build a la carpeta /docs en la raíz del repo
+      - name: Copy dist to /docs
+        run: |
+          rm -rf docs
+          cp -r shoplite-frontend/dist/shoplite-frontend/browser docs
+
+      # Hace commit de la carpeta /docs al branch main
+      - name: Commit and Push /docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --staged --quiet || git commit -m "ci: update /docs build [skip ci]"
+          git push origin main
