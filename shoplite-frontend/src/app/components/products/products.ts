@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-products',
@@ -11,30 +12,27 @@ import { CommonModule } from '@angular/common';
 })
 export class Products implements OnInit, OnDestroy {
 
-  products: any[] = [];
+  products: Product[] = [];
   currentSlide = 0;
   private autoPlayInterval: any;
 
-  private supabaseUrl = 'https://pjlqgennztgxykneosga.supabase.co/rest/v1/products?select=*';
-  private supabaseKey = 'sb_publishable_6D57oJm8ApsrfieSD_1X9w_fk4bjjfW';
-
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private productService: ProductService, 
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    const headers = new HttpHeaders({
-      'apikey': this.supabaseKey,
-      'Authorization': `Bearer ${this.supabaseKey}`
-    });
-
-    this.http.get<any[]>(this.supabaseUrl, { headers })
+    // Usamos el servicio profesional para obtener los datos
+    this.productService.getProducts()
       .subscribe({
         next: (data) => {
+          console.log('✅ Datos cargados DESDE EL SERVICIO:', data);
           this.products = [...data];
           this.cdr.detectChanges();
           this.startAutoPlay();
         },
         error: (err) => {
-          console.error('❌ Error al cargar datos de Supabase:', err);
+          console.error('❌ Error en el servicio de productos:', err);
         }
       });
   }
@@ -45,11 +43,13 @@ export class Products implements OnInit, OnDestroy {
 
   // --- Carousel Logic ---
   nextSlide(): void {
+    if (this.products.length === 0) return;
     this.currentSlide = (this.currentSlide + 1) % this.products.length;
     this.resetAutoPlay();
   }
 
   prevSlide(): void {
+    if (this.products.length === 0) return;
     this.currentSlide = (this.currentSlide - 1 + this.products.length) % this.products.length;
     this.resetAutoPlay();
   }
@@ -60,6 +60,7 @@ export class Products implements OnInit, OnDestroy {
   }
 
   private startAutoPlay(): void {
+    if (this.products.length === 0) return;
     this.autoPlayInterval = setInterval(() => {
       this.currentSlide = (this.currentSlide + 1) % this.products.length;
       this.cdr.detectChanges();
