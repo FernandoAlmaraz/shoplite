@@ -8,7 +8,7 @@
         <h2 class="carousel-title">{{ product.name }}</h2>
         <p class="carousel-desc">{{ product.description }}</p>
         <div class="carousel-price-row">
-          <span class="carousel-price">${{ product.price }}</span>
+          <span class="carousel-price">Bs. {{ product.price }}</span>
           <button class="carousel-btn">Ver producto</button>
         </div>
       </div>
@@ -55,7 +55,7 @@
         <h3 class="product-name">{{ product.name }}</h3>
         <p class="product-description">{{ product.description }}</p>
         <div class="card-footer">
-          <span class="product-price">\${{ product.price }}</span>
+          <span class="product-price">Bs.  {{ product.price }}</span>
           <button class="add-to-cart-btn" (click)="addToCart(product)">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
