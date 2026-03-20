@@ -1,0 +1,64 @@
+<div class="container fade-in" *ngIf="product">
+  <nav class="breadcrumb">
+    <a routerLink="/products">Catálogo</a> / <span>{{ product.name }}</span>
+  </nav>
+
+  <div class="product-layout">
+    <!-- Imagen -->
+    <div class="image-section">
+      <div class="image-card">
+        <img [src]="product.image" [alt]="product.name" class="main-img">
+        <span class="category-tag">{{ product.category }}</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="info-section">
+      <h1 class="title">{{ product.name }}</h1>
+      <p class="brand">Por Shoplite Premium</p>
+      
+      <div class="price-box">
+        <span class="currency">Bs.</span>
+        <span class="price">{{ product.price }}</span>
+        <span class="stock-status" [class.low]="product.stock < 5">
+          {{ product.stock > 0 ? 'Stock Disponible (' + product.stock + ')' : 'Agotado' }}
+        </span>
+      </div>
+
+      <div class="actions">
+        <button class="add-btn" (click)="addToCart($event)" [disabled]="product.stock <= 0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          {{ product.stock > 0 ? 'Agregar al Carrito' : 'Agotado' }}
+        </button>
+      </div>
+
+      <div class="details">
+        <h2>Descripción</h2>
+        <p>{{ product.description }}</p>
+        
+        <div class="features">
+          <div class="feature-item">
+            <strong>Envío Seguro</strong>
+            <span>Garantizado por Shoplite</span>
+          </div>
+          <div class="feature-item">
+            <strong>Calidad</strong>
+            <span>Producto Verificado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+  <p>Cargando detalles...</p>
+</div>
+
+<div *ngIf="!loading && (error || !product)" class="error-container fade-in">
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+  <h2>¡Ups! Producto no encontrado</h2>
+  <p>No pudimos encontrar el producto que buscas o hubo un error de conexión.</p>
+  <button routerLink="/products" class="back-btn">Volver a la tienda</button>
+</div>

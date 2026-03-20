@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
@@ -12,8 +12,18 @@ import { CartService } from '../../services/cart.service';
 })
 export class Header {
   menuOpen = false;
+  cartAnimated = signal(false);
 
-  constructor(public cartService: CartService) {}
+  constructor(public cartService: CartService) {
+    // Escuchamos cambios en el contador para disparar la animación
+    effect(() => {
+      const count = this.cartService.count();
+      if (count > 0) {
+        this.cartAnimated.set(true);
+        setTimeout(() => this.cartAnimated.set(false), 300);
+      }
+    }, { allowSignalWrites: true });
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

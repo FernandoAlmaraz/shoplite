@@ -28,6 +28,18 @@ export class ProductService {
   }
 
   /**
+   * Obtiene un producto por su ID.
+   */
+  getProductById(id: number): Observable<Product[]> {
+    const headers = new HttpHeaders({
+      'apikey': this.supabaseKey,
+      'Authorization': `Bearer ${this.supabaseKey}`
+    });
+
+    return this.http.get<Product[]>(`${this.supabaseUrl}?id=eq.${id}&select=*`, { headers });
+  }
+
+  /**
    * (Opcional) Ejemplo de cómo podrías agregar un producto en el futuro
    */
   addProduct(product: Partial<Product>): Observable<any> {
