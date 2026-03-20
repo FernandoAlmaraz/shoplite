@@ -2,6 +2,8 @@
 
 **ShopLite** es una demostración de comercio electrónico moderna, rápida y visualmente impactante construida con **Angular 19**. Destaca por su diseño "Liquid Glass" y una experiencia de usuario fluida mediante animaciones avanzadas.
 
+🔗 **[Ver Demo en Vivo](https://fernandoalmaraz.github.io/shoplite/home)**
+
 ---
 
 ## ✨ Características Principales
