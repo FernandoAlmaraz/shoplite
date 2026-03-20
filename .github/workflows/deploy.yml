@@ -33,17 +33,21 @@ jobs:
         working-directory: shoplite-frontend
         run: npm run build -- --base-href /shoplite/
 
-      # Copia el build a la carpeta /docs en la raíz del repo
-      - name: Copy dist to /docs
-        run: |
-          rm -rf docs
-          cp -r shoplite-frontend/dist/shoplite-frontend/browser docs
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: shoplite-frontend/dist/shoplite-frontend/browser/
 
-      # Hace commit de la carpeta /docs al branch main
-      - name: Commit and Push /docs
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git diff --staged --quiet || git commit -m "ci: update /docs build [skip ci]"
-          git push origin main
+  deploy:
+    needs: build-and-deploy
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
